@@ -7,6 +7,7 @@ class ParserTest < Kss::Test
     @sass_parsed = Kss::Parser.new('test/fixtures/sass')
     @css_parsed = Kss::Parser.new('test/fixtures/css')
     @less_parsed = Kss::Parser.new('test/fixtures/less')
+    @all = Kss::Parser.new('test/fixtures')
 
     @css_comment = <<comment
 /*
@@ -98,6 +99,10 @@ comment
   test "parses nested SASS documents" do
     assert_equal "Your standard form element.", @sass_parsed.section('3.0.0').description
     assert_equal "Your standard text input box.", @sass_parsed.section('3.0.1').description
+  end
+
+  test "handles paths in file names" do
+    assert_equal "less/mixins.less", @all.section('4.0.0').filename
   end
 
   test "public sections returns hash of sections" do

@@ -1,3 +1,5 @@
+require 'pathname'
+
 module Kss
   # Public: The main KSS parser. Takes a directory full of SASS / SCSS / CSS
   # files and parses the KSS within them.
@@ -12,6 +14,7 @@ module Kss
     #
     # base_path - The path String where style files are located.
     def initialize(base_path)
+      @base_path = Pathname.new(base_path)
       @sections = {}
 
       Dir["#{base_path}/**/*.*"].each do |filename|
@@ -23,7 +26,7 @@ module Kss
     end
 
     def add_section comment_text, filename
-      base_name = File.basename(filename)
+      base_name = Pathname.new(filename).relative_path_from(@base_path).to_s
       section = Section.new(comment_text, base_name)
       @sections[section.section] = section
     end
